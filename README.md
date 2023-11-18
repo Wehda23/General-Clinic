@@ -51,7 +51,7 @@ This repository contains SQL statements to set up a general clinic database.
 
 ## Database Entity Relationship Diagram
 
-Here's an entity-relationship diagram (ERD) illustrating the structure of the car hire database:
+Here's an entity-relationship diagram (ERD) illustrating the structure of General Clinic database:
 
 ![ERD](./erd.png)
 
