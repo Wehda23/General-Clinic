@@ -22,7 +22,7 @@ python -OO option will remove docstring during runtime of script to accelerate t
 python --help
 ```
 
-# Car Hire Database Schema
+# General Clinic Database Schema
 
 This repository contains SQL statements to set up a general clinic database.
 
