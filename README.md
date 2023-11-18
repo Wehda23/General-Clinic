@@ -14,6 +14,14 @@ Second run django app:
 python -OO manage.py runserver
 ```
 
+Notes:
+
+python -OO option will remove docstring during runtime of script to accelerate the program, for more information run:
+
+```bash
+python --help
+```
+
 # Car Hire Database Schema
 
 This repository contains SQL statements to set up a general clinic database.
