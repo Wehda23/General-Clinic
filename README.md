@@ -5,12 +5,18 @@
 - **Backend server side**:
 
   ![Python](https://img.shields.io/badge/Python%20-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white)
-  [![Django](https://img.shields.io/badge/Django%20-%2314354C.svg?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
+  [![Django](https://img.shields.io/badge/Django%20-%2320232a.svg?style=for-the-badge&logo=django&logoColor=white&color=092E20)](https://www.djangoproject.com/)
 
 - **Frontend server side**:
 
   ![JavaScript](https://img.shields.io/badge/JavaScript%20-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black)
-  [![React](https://img.shields.io/badge/React%20-%2314354C.svg?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+  [![React](https://img.shields.io/badge/React%20-%2320232a.svg?style=for-the-badge&logo=react&logoColor=61DAFB&color=61DAFB)](https://reactjs.org/)
+  [![Redux](https://img.shields.io/badge/Redux%20-%2320232a.svg?style=for-the-badge&logo=redux&logoColor=764ABC&color=764ABC)](https://redux.js.org/)
+
+- **Other Tools**:
+  [![Postman](https://img.shields.io/badge/Postman%20-%2320232a.svg?style=for-the-badge&logo=postman&logoColor=FF6C37&color=FF6C37)](https://www.postman.com/)
+  [![MySQL](https://img.shields.io/badge/MySQL%20-%2320232a.svg?style=for-the-badge&logo=mysql&logoColor=white&color=4479A1)](https://www.mysql.com/)
+  [![Docker](https://img.shields.io/badge/Docker%20-%2320232a.svg?style=for-the-badge&logo=docker&logoColor=2496ED&color=2496ED)](https://www.docker.com/)
 
 Command to run application
 
