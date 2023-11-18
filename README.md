@@ -2,13 +2,13 @@
 
 ## Technologies:
 
-Backend server side:
-![Python Logo](https://www.python.org/static/img/python-logo.png)
-![Django Logo](https://www.djangoproject.com/m/img/logos/django-logo-negative.png)
+- **Backend server side**:
+  ![Python Logo](https://www.python.org/static/img/python-logo.png)
+  ![Django Logo](https://www.djangoproject.com/m/img/logos/django-logo-negative.png)
 
-Frontend server side:
-![JavaScript Logo](https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg)
-![React Logo](https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg)
+- **Frontend server side**:
+  ![JavaScript Logo](https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg)
+  ![React Logo](https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg)
 
 Command to run application
 
