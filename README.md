@@ -1,14 +1,22 @@
-# Car Hire Management System by Waheed Khaled.
+# General Clinic System by Waheed Khaled.
 
 Command to run application
 
+First move to general_clinic folder/directory:
+
 ```bash
-flask --app main run --debugger
+cd general_clinic
+```
+
+Second run django app:
+
+```bash
+python -OO manage.py runserver
 ```
 
 # Car Hire Database Schema
 
-This repository contains SQL statements to set up a simple car hire database.
+This repository contains SQL statements to set up a general clinic database.
 
 ## Database Entity Relationship Diagram
 
@@ -18,30 +26,69 @@ Here's an entity-relationship diagram (ERD) illustrating the structure of the ca
 
 ## Schema
 
-The SQL script sets up three tables: `Customers`, `Vehicles`, and `Bookings`.
+The SQL script sets up three tables: `Patient`, `Doctor`, `Staff`, `Appointment`, `Payment` and `Medical_Record`.
 
 ### Customers Table
 
 ```sql
-CREATE TABLE Customers (
-  customer_id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE Patient (
+    Patient_ID UUID PRIMARY KEY,
+    First_Name VARCHAR(50),
+    Last_Name VARCHAR(50),
+    Date_of_Birth DATE,
+    Contact_Info VARCHAR(100),
+    Address VARCHAR(100)
 );
 
-CREATE TABLE Vehicles (
-  vehicle_id INT AUTO_INCREMENT PRIMARY KEY,
-  car_type ENUM('Small Car', 'Family Car', 'Van') NOT NULL
+CREATE TABLE Doctor (
+    Doctor_ID UUID PRIMARY KEY,
+    First_Name VARCHAR(50),
+    Last_Name VARCHAR(50),
+    Specialty VARCHAR(50),
+    Contact_Info VARCHAR(100)
 );
 
-CREATE TABLE Bookings (
-  booking_id INT AUTO_INCREMENT PRIMARY KEY,
-  customer_id INT NOT NULL,
-  vehicle_id INT NOT NULL,
-  hire_date DATE NOT NULL,
-  return_date DATE NOT NULL,
-  FOREIGN KEY (customer_id) REFERENCES Customers(customer_id),
-  FOREIGN KEY (vehicle_id) REFERENCES Vehicles(vehicle_id)
+CREATE TABLE Staff (
+    Staff_ID UUID PRIMARY KEY,
+    First_Name VARCHAR(50),
+    Last_Name VARCHAR(50),
+    Position VARCHAR(50),
+    Contact_Info VARCHAR(100)
+);
+
+CREATE TABLE Appointment (
+    Appointment_ID UUID PRIMARY KEY,
+    Patient_ID UUID,
+    Doctor_ID UUID,
+    Staff_ID UUID,
+    Appointment_DateTime TIMESTAMP,
+    Status VARCHAR(20),
+    FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
+    FOREIGN KEY (Doctor_ID) REFERENCES Doctor(Doctor_ID),
+    FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID)
+);
+
+CREATE TABLE Medical_Record (
+    Record_ID UUID PRIMARY KEY,
+    Patient_ID UUID,
+    Doctor_ID UUID,
+    Date DATE,
+    Diagnosis TEXT,
+    Treatment TEXT,
+    Prescription TEXT,
+    FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
+    FOREIGN KEY (Doctor_ID) REFERENCES Doctor(Doctor_ID)
+);
+
+CREATE TABLE Payment (
+    Payment_ID UUID PRIMARY KEY,
+    Patient_ID UUID,
+    Amount DECIMAL(10, 2),
+    Date DATE,
+    Payment_Method VARCHAR(50),
+    Payment_Process_Method VARCHAR(50),
+    Staff_ID UUID,
+    FOREIGN KEY (Patient_ID) REFERENCES Patient(Patient_ID),
+    FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID)
 );
 ```
