@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "patient.apps.PatientConfig",
     "corsheaders",
     'rest_framework',
-    'ratelimit',
 ]
 
 MIDDLEWARE = [
