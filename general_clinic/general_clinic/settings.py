@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "patient.apps.PatientConfig",
     "corsheaders",
-    'rest_framework',
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -84,12 +84,12 @@ WSGI_APPLICATION = "general_clinic.wsgi.application"
 
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
 }
 
@@ -140,6 +140,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_WHITELIST = [
-'http://localhost:3000',
-'http://127.0.0.1:8000',
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
 ]
