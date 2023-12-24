@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .models import Patient
 from .serializer import PatientSerializer
 from django.db.models import Q
+
 
 
 # Create your views here.
@@ -34,7 +36,17 @@ class PatientDetails(APIView):
     def delete(self, request):
         pass
 
+# Patient View
+class PatientView(APIView):
+    """
+    Only can communicate through with an authenticated User Instance
+    The view will be concerned with Patient details
+    Updates, Delete etc..
+    """
+    permission_classes = (IsAuthenticated,)
 
+
+# Retrieve list of patients
 # This view should be only for authenticated and staff members to see
 class PatientsView(APIView):
     def get(self, request, format=None):
