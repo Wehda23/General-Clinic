@@ -6,7 +6,6 @@ import uuid
 import os
 
 
-
 # Create your models here.
 def profile_image_path(instance, filename):
     """
@@ -52,6 +51,7 @@ class Employee(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ["user__id"]
 
 
 class Staff(Employee):
@@ -78,6 +78,7 @@ def deleteProfileImageAndFolder(sender, instance, using, **kwargs) -> None:
                 dir_path = os.path.join(root, dir_name)
                 os.rmdir(dir_path)
         os.rmdir(directory)
+
 
 @receiver(pre_delete, sender=Staff)
 def deleteProfileImageAndFolder(sender, instance, using, **kwargs) -> None:

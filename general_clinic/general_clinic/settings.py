@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "patient.apps.PatientConfig",
     "staff.apps.StaffConfig",
     "medical.apps.MedicalConfig",
+    "user_authenticator.apps.UserAuthenticatorConfig",
+    "staff_authentication_end_point.apps.StaffAuthenticationEndPointConfig",
     "corsheaders",
     "rest_framework",
 ]

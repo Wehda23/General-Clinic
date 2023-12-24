@@ -22,6 +22,10 @@ from django.conf import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("patients/", include("patient.urls")),
+    path("employees/", include("staff.urls")),
+    path("medical/", include("medical.urls")),
+    path("patient/", include("user_authenticator.urls")),
+    path("employee/", include("staff_authentication_end_point.urls")),
 ]
 
 

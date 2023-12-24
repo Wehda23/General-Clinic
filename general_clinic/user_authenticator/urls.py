@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
-
+from .views import LoginView
 
 urlpatterns = [
-    # path("", PatientsView.as_view(), name="patients-view"),
+   path("", LoginView.as_view(), name="client-login-view"),
+
 ]
