@@ -31,6 +31,14 @@ class UserSerializer(serializers.ModelSerializer):
             "patient",
         ]
 
+    def to_representation(self, instance):
+        """Perform few tasks everything time this serializer is called"""
+        user: User = User.objects.get(email = instance.email)
+        # Update patient age everytime instance is called.
+        user.patient.set_age
+
+        return super().to_representation(instance)
+    
 # Create A UserSerializer
 class UserLoginSerializer(serializers.ModelSerializer):
     class Meta:
