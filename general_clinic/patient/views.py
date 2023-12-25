@@ -7,7 +7,6 @@ from .serializer import PatientSerializer
 from django.db.models import Q
 
 
-
 # Create your views here.
 class PatientDetails(APIView):
     def get(self, request, contact, format=None):
@@ -36,6 +35,7 @@ class PatientDetails(APIView):
     def delete(self, request):
         pass
 
+
 # Patient View
 class PatientView(APIView):
     """
@@ -43,6 +43,7 @@ class PatientView(APIView):
     The view will be concerned with Patient details
     Updates, Delete etc..
     """
+
     permission_classes = (IsAuthenticated,)
 
 

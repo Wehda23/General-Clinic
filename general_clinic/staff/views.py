@@ -24,6 +24,7 @@ class DoctorView(APIView):
         doctor: Doctor = Doctor.objects.get(user__id=pk).delete()
         return Response("Deleted Succesfully")
 
+
 class ListStaffView(APIView):
     def get(self, request, pk) -> Response:
         return Response("Staff")

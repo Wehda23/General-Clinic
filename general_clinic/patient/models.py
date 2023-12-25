@@ -1,6 +1,7 @@
 from django.db import models
-import uuid
 from django.contrib.auth.models import User
+from datetime import date
+import uuid
 
 # Create your models here.
 
@@ -22,13 +23,6 @@ class Patient(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False
     )
     user: User = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
-    first_name: models.CharField = models.CharField(
-        max_length=50, blank=False, null=False
-    )
-    last_name: models.CharField = models.CharField(
-        max_length=50, blank=False, null=False
-    )
-    email_address: models.EmailField = models.EmailField(max_length=255, default="")
     contact_info: models.CharField = models.CharField(
         max_length=100, blank=True, null=True
     )
@@ -38,13 +32,27 @@ class Patient(models.Model):
     date_of_birth: models.DateField = models.DateField(
         null=False, blank=False, editable=True
     )
+    age: models.IntegerField = models.IntegerField(null=True, blank=True)
     created_at: models.DateTimeField = models.DateTimeField(
         auto_now_add=True, null=True, blank=True, editable=False
     )
     updatedAt: models.DateTimeField = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["first_name", "created_at"]
+        ordering = ["user__first_name", "created_at"]
 
     def __str__(self) -> str:
-        return self.first_name
+        return self.user.first_name
+
+    @property
+    def set_age(self):
+        
+        if self.date_of_birth:
+            today = date.today()
+            self.age = today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
+            
+        return None
+    
+    def save(self):
+        self.set_age
+        super().save()
