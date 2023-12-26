@@ -22,7 +22,6 @@ class DateValidator(Validator):
         date: str = self.data
         # Check the date format first
         try:
-            print(date)
             datetime.datetime.strptime(date, "%Y-%m-%d")
         except Exception as e:
             raise self.error(
