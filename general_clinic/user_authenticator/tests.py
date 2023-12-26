@@ -29,6 +29,7 @@ class AccountTests(APITestCase):
         self.assertEqual(User.objects.get().first_name, "Waheed")
 
     def test_login_account(self):
+        """Method to test account login"""
         # Create a user to test login
         user = User.objects.create_user(username='testuser', email='test@example.com', password='Testpassword123')
         patient = Patient.objects.create(user=user)
@@ -43,6 +44,7 @@ class AccountTests(APITestCase):
         self.assertTrue('token' in response.data)
 
     def test_delete_account(self):
+        """Method to test account deletion"""
         # Delete a user to test login
         user = User.objects.create_user(username='testuser', email='test@example.com', password='Testpassword123')
         patient = Patient.objects.create(user=user)
@@ -65,3 +67,24 @@ class AccountTests(APITestCase):
         self.assertEqual(User.objects.count(), 0)  # Verify that the user is deleted
         self.assertEqual(Patient.objects.count(), 0)  # Optionally, check related models deletion
 
+class RefreshTokenTests(APITestCase):
+    def test_refresh_token(self):
+        """Method to test token refresh"""
+        # Delete a user to test login
+        user = User.objects.create_user(username='testuser', email='test@example.com', password='Testpassword123')
+        patient = Patient.objects.create(user=user)
+        # Login
+        url = reverse("client-login-view")
+        data = {
+            "email": "test@example.com",  # Change this to the correct username field used for login
+            "password": "Testpassword123",
+        }
+        response = self.client.post(url, data)
+        # Include the authorization token in the headers
+        token: str = response.data['token']['refresh']
+        data_refresh = {"refresh": token}
+        url = reverse("client-refresh-token-view")  # Replace with your JWT refresh view URL
+        response = self.client.post(url, data_refresh)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
