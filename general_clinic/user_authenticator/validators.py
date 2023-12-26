@@ -3,7 +3,6 @@ import datetime
 import re
 
 
-
 class Validator(ABC):
     def __init__(self, data: str, error):
         self.data: str = data
@@ -24,9 +23,7 @@ class DateValidator(Validator):
         try:
             datetime.datetime.strptime(date, "%Y-%m-%d")
         except Exception as e:
-            raise self.error(
-                "Incorrect data format, should be YYYY-MM-DD."
-            )
+            raise self.error("Incorrect data format, should be YYYY-MM-DD.")
 
         return True
 
@@ -54,16 +51,13 @@ class NameValidator(Validator):
                 "Please make sure to enter you'r first name and last name."
             )
         if not name.isalpha():
-            raise self.error(
-                "Your first name can only contain characters."
-            )
+            raise self.error("Your first name can only contain characters.")
         return True
 
 
 class PasswordValidator(Validator):
     """Class Used to validate password"""
 
-    
     def length(self, password: str):
         if len(password) < 8:
             raise self.error(
@@ -75,16 +69,12 @@ class PasswordValidator(Validator):
             )
         else:
             return True
-    
+
     def character_format(self, password: str):
         if not any(char.isalpha() for char in password):
-            raise self.error(
-                "Password should contain at least one character A-Z a-z."
-            )
+            raise self.error("Password should contain at least one character A-Z a-z.")
         if not any(number.isnumeric() for number in password):
-            raise self.error(
-                "Password should contain at least one number 0-9."
-            )
+            raise self.error("Password should contain at least one number 0-9.")
         return True
 
     def validate(self):

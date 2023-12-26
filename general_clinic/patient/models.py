@@ -16,6 +16,7 @@ def profile_image_path(instance, filename):
     """
     return f"{instance.__class__.__name__}/{instance.__class__.__name__.lower()}_{instance.user.id}/{filename}"
 
+
 """sql
 CREATE TABLE Patient (
     Patient_ID UUID PRIMARY KEY,
@@ -76,7 +77,6 @@ class Patient(models.Model):
         return None
 
 
-
 # Delete image function
 def delete_profile_image_and_folder(instance) -> None:
     """
@@ -94,10 +94,12 @@ def delete_profile_image_and_folder(instance) -> None:
                 os.rmdir(dir_path)
         os.rmdir(directory)
 
+
 # Detele user instance
 def deleteUserInstance(instance: Patient) -> None:
-    """ Function used to delete the user instance of the patient"""
+    """Function used to delete the user instance of the patient"""
     instance.user.delete()
+
 
 @receiver(pre_delete, sender=Patient)
 def deletePatient(sender, instance, using, **kwargs) -> None:

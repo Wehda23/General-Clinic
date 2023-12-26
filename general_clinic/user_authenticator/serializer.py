@@ -8,6 +8,7 @@ from .validators import (
     PasswordValidator,
 )
 
+
 # Create A Patient's Serializer
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -86,6 +87,7 @@ class PatientRegisterSerializer(serializers.ModelSerializer):
             "date_of_birth": {"required": True},
         }
 
+
 # Create Serializer for user registeration.
 class UserRegisterSerializer(serializers.ModelSerializer):
     patient = PatientRegisterSerializer()
@@ -106,13 +108,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # validate first name
         NameValidator(value, serializers.ValidationError).validate()
         return value
-    
+
     def validate_last_name(self, value):
         """Method to Validate last name"""
         # validate last name
         NameValidator(value, serializers.ValidationError).validate()
         return value
-    
+
     def validate_email(self, value):
         """
         Method validates email format
@@ -130,24 +132,26 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         """Method used to validate registeration of a new patient account"""
         # Need to check if there is not another user already with same email
-        if User.objects.filter(email= attrs['email']).exists():
+        if User.objects.filter(email=attrs["email"]).exists():
             # Raise account already exists
-            raise serializers.ValidationError("Patient account with this email already exists")
-        
+            raise serializers.ValidationError(
+                "Patient account with this email already exists"
+            )
+
         return attrs
 
     def create(self, validated_data, *args, **kwargs):
         """Method used to create a new User and Patient Instance"""
-        patient_data = validated_data.pop('patient')
-        
+        patient_data = validated_data.pop("patient")
+
         # Create the user instance
-        validated_data['username'] = " "
+        validated_data["username"] = " "
         user = User.objects.create_user(**validated_data)
         user.username = user.first_name + " " + user.last_name
         user.save()
-        #Create the patient instance
-        new_patient: Patient = Patient.objects.create(**patient_data, user = user)
+        # Create the patient instance
+        new_patient: Patient = Patient.objects.create(**patient_data, user=user)
         new_patient.set_age
         new_patient.save()
-        
+
         return user
