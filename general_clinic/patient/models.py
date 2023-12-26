@@ -30,7 +30,7 @@ class Patient(models.Model):
 
     # Date Fields
     date_of_birth: models.DateField = models.DateField(
-        null=False, blank=False, editable=True
+        null=True, blank=True, editable=True
     )
     age: models.IntegerField = models.IntegerField(null=True, blank=True)
     created_at: models.DateTimeField = models.DateTimeField(
@@ -42,7 +42,8 @@ class Patient(models.Model):
         ordering = ["user__first_name", "created_at"]
 
     def __str__(self) -> str:
-        return self.user.first_name
+        user: str = self.user.username if self.user else "None"
+        return f"{user}"
 
     @property
     def set_age(self):
@@ -58,6 +59,3 @@ class Patient(models.Model):
             )
 
         return None
-
-    def save(self):
-        super().save()

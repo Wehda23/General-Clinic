@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from .serializer import UserLoginSerializer, UserRegisterSerializer
 from .refresh_token import IsRefreshToken, get_tokens_for_user
-
+from patient.models import Patient
 
 def get_error(errors: list | dict) -> str:
     """Function used to grab or parse error message from errors
@@ -57,12 +57,13 @@ class LoginView(APIView):
         :args: Arguments.
         :kwargs: Keyword arguements.
         """
+        
         # Get serializer
         new_patient: UserRegisterSerializer = UserRegisterSerializer(data=request.data)
         # Check if it passes validation or not
         if new_patient.is_valid():
-            # new_patient.save()
-            return Response("Registeration passes")
+            new_patient.save()
+            return Response("Account Registerated Successfully")
         
         # Grab error
         error: str = get_error(new_patient.errors)
