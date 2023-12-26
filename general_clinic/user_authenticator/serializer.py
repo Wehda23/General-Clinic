@@ -1,17 +1,10 @@
 from rest_framework import serializers
 from patient.models import Patient
 from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
+from .refresh_token import get_tokens_for_user
 
 
-# Create token Function
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
 
-    return {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-    }
 
 # Create A Patient's Serializer
 class PatientSerializer(serializers.ModelSerializer):
@@ -75,3 +68,5 @@ class UserLoginSerializer(serializers.ModelSerializer):
         data['token'] = get_tokens_for_user(user)
         return data
 
+class UserRefreshTokenSerializer(serializers.ModelSerializer):
+    pass

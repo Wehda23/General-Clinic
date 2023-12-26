@@ -1,11 +1,10 @@
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from .serializer import UserLoginSerializer
-
+from .refresh_token import IsRefreshToken, get_tokens_for_user
 
 # Create your views here.
 class LoginView(APIView):
@@ -52,12 +51,15 @@ class LoginView(APIView):
         return Response("Forgot password Patient")
 
 
+
 # Refresh Token View
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsRefreshToken])
 def refresh_token(request):
     """
     Function used to refresh token of user
     :request: Request Object.
     """
-    return Response("Refresh Token View.")
+    # get new tokens for patient
+    tokens: dict = get_tokens_for_user(request.user)
+    return Response(tokens, status=status.HTTP_202_ACCEPTED)
