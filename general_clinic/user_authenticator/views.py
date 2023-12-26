@@ -3,8 +3,30 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
-from .serializer import UserLoginSerializer
+from .serializer import UserLoginSerializer, UserRegisterSerializer
 from .refresh_token import IsRefreshToken, get_tokens_for_user
+
+
+def get_error(errors: list | dict) -> str:
+    """Function used to grab or parse error message from errors
+    
+    Args:
+        - errors: is a List | Dictionary like datastructure which contain error message.
+    
+    Returns:
+        - error message as a string
+    """
+    if isinstance(errors, list):
+        
+        return errors[0]
+    elif isinstance(errors, dict):
+        try:
+            key: str = list(errors.keys())[0]
+            return errors[key][0]
+        # Nested error
+        except KeyError:
+            nested_key: str = list(errors.keys())[0]
+            return get_error(errors[nested_key])
 
 # Create your views here.
 class LoginView(APIView):
@@ -25,10 +47,8 @@ class LoginView(APIView):
             return Response(patient_serializer.data, status=status.HTTP_200_OK)
 
         # Grab error
-        error: str = patient_serializer.errors.get('non_field_errors', "Unknown error")[0]
-        return Response(
-            {"error": error},
-            status=status.HTTP_404_NOT_FOUND)
+        error: str = get_error(patient_serializer.errors)
+        return Response(error, status=status.HTTP_404_NOT_FOUND)
 
     # Register User
     def post(self, request, *args, **kwargs):
@@ -37,8 +57,16 @@ class LoginView(APIView):
         :args: Arguments.
         :kwargs: Keyword arguements.
         """
-
-        return Response("Register Patient")
+        # Get serializer
+        new_patient: UserRegisterSerializer = UserRegisterSerializer(data=request.data)
+        # Check if it passes validation or not
+        if new_patient.is_valid():
+            # new_patient.save()
+            return Response("Registeration passes")
+        
+        # Grab error
+        error: str = get_error(new_patient.errors)
+        return Response(error, status=status.HTTP_406_NOT_ACCEPTABLE)
 
     # forget password view
     def put(self, request, *args, **kwargs):
@@ -47,9 +75,9 @@ class LoginView(APIView):
         :args: Arguments.
         :kwargs: Keyword arguements.
         """
-
+        
+        # Return Error Response incase error was raised
         return Response("Forgot password Patient")
-
 
 
 # Refresh Token View
