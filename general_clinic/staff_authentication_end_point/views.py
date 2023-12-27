@@ -9,7 +9,7 @@ from staff.models import Staff, Doctor
 
 
 
-class StaffLoginView(APIView):
+class EmployeeLoginView(APIView):
     """Staff Login View"""
 
     def post(self, request, *args, **kwargs):
@@ -23,19 +23,6 @@ class StaffLoginView(APIView):
 
         return Response("Reset Password", status=status.HTTP_200_OK)
     
-class DoctorLoginView(APIView):
-    """Doctor Login View"""
-
-    def post(self,request, *args, **kwargs):
-        """Login post request for doctor"""
-        data = request.data
-        return Response("Doctor login view.", status=status.HTTP_200_OK)
-    
-    def put(self,request, *args,**kwargs):
-        """Reset password for doctor"""
-        data = request.data
-        return Response("Doctor Forgot password view", status=status.HTTP_200_OK)
-
 
 # We are going to create a staff registeration view which will require an authenticated member to register this new staff member
 @api_view(['POST'])
@@ -53,5 +40,8 @@ def doctor_registeration(request, *args, **kwargs):
     # Code to validate the doctor's credentials and save them in the database goes here
     
     return Response("Doctor registeration under review.")
+
+
+
 
 
