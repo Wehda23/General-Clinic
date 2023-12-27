@@ -25,12 +25,6 @@ class Employee(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False
     )
     # CharFields
-    first_name: models.CharField = models.CharField(
-        max_length=50, blank=False, null=False
-    )
-    last_name: models.CharField = models.CharField(
-        max_length=50, blank=False, null=False
-    )
     position: models.CharField = models.CharField(
         max_length=50, blank=False, null=False
     )
@@ -48,18 +42,26 @@ class Employee(models.Model):
     date_of_birth: models.DateField = models.DateField(
         null=True, blank=True, editable=True
     )
+    # Permissions
+    allow_reschedule: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
+    allow_delete_appointment: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
 
     class Meta:
         abstract = True
         ordering = ["user__id"]
 
+    def __str__(self):
+        employee = f"{self.user.username if self.user else None} {self.position} as {self.__class__.__name__}".title()
+        return employee
 
 class Staff(Employee):
-    pass
+    allow_appoint_doctor: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
 
 
 class Doctor(Employee):
-    pass
+    is_verified: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
+    is_available: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
+    
 
 
 # Delete image function
