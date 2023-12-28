@@ -49,7 +49,7 @@ class IsRefreshToken(BasePermission):
             return False
 
         # Validate user.
-        if not self.is_valid_user(decoded_token):
+        if not self.is_valid_user():
             return False
 
         # Grab the user

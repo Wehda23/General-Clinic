@@ -34,6 +34,7 @@ class LoginView(APIView):
     """
     This view will be used for the purpose of a user to Login/Register view.
     """
+
     # Account Login
     def post(self, request, *args, **kwargs):
         """
@@ -61,7 +62,7 @@ class LoginView(APIView):
         return Response("Forgot password Patient")
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def patient_register(request, *args, **kwargs):
     """
     Post API view where the patient registers a new account.
@@ -81,18 +82,20 @@ def patient_register(request, *args, **kwargs):
     error: str = get_error(new_patient.errors)
     return Response(error, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-@api_view(['DELETE'])
+
+@api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def patient_delete(request, *args, **kwargs):
-        """
-        Delete API view where the patient deletes their account
-        :args: Arguments.
-        :kwargs: Keyword arguements.
-        """
-        patient: Patient = request.user.patient
-        patient.delete()
-        # Return Error Response incase error was raised
-        return Response("Patient Account Deletion is successful", status=status.HTTP_200_OK)
+    """
+    Delete API view where the patient deletes their account
+    :args: Arguments.
+    :kwargs: Keyword arguements.
+    """
+    patient: Patient = request.user.patient
+    patient.delete()
+    # Return Error Response incase error was raised
+    return Response("Patient Account Deletion is successful", status=status.HTTP_200_OK)
+
 
 # Refresh Token View
 @api_view(["POST"])

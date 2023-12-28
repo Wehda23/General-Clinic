@@ -6,7 +6,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("staff", EmployeeLoginView.as_view(), name='employee-login-view'),
-    path("register/staff", staff_registeration, name = 'staff-register-view'),
-    path("register/doctor", doctor_registeration, name='doctor-register-view')
+    path("login", EmployeeLoginView.as_view(), name="employee-login-view"),
+    path("register/staff", staff_registeration, name="staff-register-view"),
+    path("register/doctor", doctor_registeration, name="doctor-register-view"),
 ]

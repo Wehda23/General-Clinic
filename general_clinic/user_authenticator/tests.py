@@ -22,7 +22,7 @@ class AccountTests(APITestCase):
             "first_name": "Waheed",
             "last_name": "Khaled",
         }
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Patient.objects.count(), 1)
         self.assertEqual(User.objects.count(), 1)
@@ -31,7 +31,9 @@ class AccountTests(APITestCase):
     def test_login_account(self):
         """Method to test account login"""
         # Create a user to test login
-        user = User.objects.create_user(username='testuser', email='test@example.com', password='Testpassword123')
+        user = User.objects.create_user(
+            username="testuser", email="test@example.com", password="Testpassword123"
+        )
         patient = Patient.objects.create(user=user)
 
         url = reverse("client-login-view")
@@ -41,12 +43,14 @@ class AccountTests(APITestCase):
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue('token' in response.data)
+        self.assertTrue("token" in response.data)
 
     def test_delete_account(self):
         """Method to test account deletion"""
         # Delete a user to test login
-        user = User.objects.create_user(username='testuser', email='test@example.com', password='Testpassword123')
+        user = User.objects.create_user(
+            username="testuser", email="test@example.com", password="Testpassword123"
+        )
         patient = Patient.objects.create(user=user)
         # Login
         url = reverse("client-login-view")
@@ -56,22 +60,29 @@ class AccountTests(APITestCase):
         }
         response = self.client.post(url, data)
         # Include the authorization token in the headers
-        token: str = response.data['token']['access']
+        token: str = response.data["token"]["access"]
         auth_headers = {
-            'HTTP_AUTHORIZATION': f'Bearer {token}'  # Modify this based on your authentication method
+            "HTTP_AUTHORIZATION": f"Bearer {token}"  # Modify this based on your authentication method
         }
         # Delete
-        url = reverse("client-account-delete")  # Replace with your delete account view URL
+        url = reverse(
+            "client-account-delete"
+        )  # Replace with your delete account view URL
         response = self.client.delete(url, **auth_headers)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(User.objects.count(), 0)  # Verify that the user is deleted
-        self.assertEqual(Patient.objects.count(), 0)  # Optionally, check related models deletion
+        self.assertEqual(
+            Patient.objects.count(), 0
+        )  # Optionally, check related models deletion
+
 
 class RefreshTokenTests(APITestCase):
     def test_refresh_token(self):
         """Method to test token refresh"""
         # Delete a user to test login
-        user = User.objects.create_user(username='testuser', email='test@example.com', password='Testpassword123')
+        user = User.objects.create_user(
+            username="testuser", email="test@example.com", password="Testpassword123"
+        )
         patient = Patient.objects.create(user=user)
         # Login
         url = reverse("client-login-view")
@@ -81,10 +92,12 @@ class RefreshTokenTests(APITestCase):
         }
         response = self.client.post(url, data)
         # Include the authorization token in the headers
-        token: str = response.data['token']['refresh']
+        token: str = response.data["token"]["refresh"]
         data_refresh = {"refresh": token}
-        url = reverse("client-refresh-token-view")  # Replace with your JWT refresh view URL
+        url = reverse(
+            "client-refresh-token-view"
+        )  # Replace with your JWT refresh view URL
         response = self.client.post(url, data_refresh)
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.assertIn('access', response.data)
-        self.assertIn('refresh', response.data)
+        self.assertIn("access", response.data)
+        self.assertIn("refresh", response.data)

@@ -43,8 +43,12 @@ class Employee(models.Model):
         null=True, blank=True, editable=True
     )
     # Permissions
-    allow_reschedule: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
-    allow_delete_appointment: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
+    allow_reschedule: models.BooleanField = models.BooleanField(
+        null=True, blank=True, default=False
+    )
+    allow_delete_appointment: models.BooleanField = models.BooleanField(
+        null=True, blank=True, default=False
+    )
 
     class Meta:
         abstract = True
@@ -54,14 +58,20 @@ class Employee(models.Model):
         employee = f"{self.user.username if self.user else None} {self.position} as {self.__class__.__name__}".title()
         return employee
 
+
 class Staff(Employee):
-    allow_appoint_doctor: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
+    allow_appoint_doctor: models.BooleanField = models.BooleanField(
+        null=True, blank=True, default=False
+    )
 
 
 class Doctor(Employee):
-    is_verified: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
-    is_available: models.BooleanField = models.BooleanField(null= True, blank= True ,default=False)
-    
+    is_verified: models.BooleanField = models.BooleanField(
+        null=True, blank=True, default=False
+    )
+    is_available: models.BooleanField = models.BooleanField(
+        null=True, blank=True, default=False
+    )
 
 
 # Delete image function
