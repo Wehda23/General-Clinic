@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save, pre_delete
 from django.dispatch import receiver
+from django.db import IntegrityError
 import uuid
 import os
 
@@ -108,3 +109,18 @@ def deleteProfileImageAndFolder(sender, instance, using, **kwargs) -> None:
     """
     # Delete directory
     delete_profile_image_and_folder(instance)
+
+
+@receiver(pre_save, sender=Doctor)
+def check_doctor_roles(sender, instance, **kwargs):
+    # Check if a related instance already exists in any other model
+    if hasattr(instance.user, 'staff'):
+        # If a related instance exists, prevent saving the User
+        raise IntegrityError('User cannot have multiple roles')
+
+@receiver(pre_save, sender=Staff)
+def check_staff_roles(sender, instance, **kwargs):
+    # Check if a related instance already exists in any other model
+    if hasattr(instance.user, 'doctor'):
+        # If a related instance exists, prevent saving the User
+        raise IntegrityError('User cannot have multiple roles')

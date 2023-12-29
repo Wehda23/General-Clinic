@@ -40,13 +40,13 @@ class EmployeeLoginSerializer(serializers.ModelSerializer):
 
     def get_employee(self, employee: User) -> dict:
         """Method to get employee"""
-        match (employee):
-            case hasattr(employee, "staff"):
-                return StaffSerializer(employee.staff).data
-            case hasattr(employee, "doctor"):
-                return DoctorSerializer(employee.doctor).data
-            case _:
-                raise serializers.ValidationError("Employee is not a valid user")
+        if hasattr(employee, "staff"):
+            return StaffSerializer(employee.staff).data
+        elif hasattr(employee, "doctor"):
+            return DoctorSerializer(employee.doctor).data
+        else:
+            raise serializers.ValidationError("Employee is not a valid user")
+                
 
     def validate(self, attrs):
         """Method used to validate User"""

@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from staff_authentication_end_point.authenticators import (
     IsStaff,
+    IsEmployee,
 )
 from staff_authentication_end_point.serializers import EmployeeLoginSerializer
 from staff.models import Staff, Doctor
@@ -30,17 +31,20 @@ def get_error(errors: list | dict) -> str:
         except KeyError:
             nested_key: str = list(errors.keys())[0]
             return get_error(errors[nested_key])
-        
+
 
 # Create your views here.
 class EmployeeLoginView(APIView):
     """Employee Login View"""
+    permission_classes = (IsEmployee,)
 
     def post(self, request, *args, **kwargs):
         """Login post requests for Employee"""
         data: dict = request.data
 
-        employee_serializer: EmployeeLoginSerializer = EmployeeLoginSerializer(data= data)
+        employee_serializer: EmployeeLoginSerializer = EmployeeLoginSerializer(
+            data=data
+        )
         # validate Employee
         if employee_serializer.is_valid():
             # Grab validated data
