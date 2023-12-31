@@ -34,6 +34,7 @@ class Employee(models.Model):
         blank=True,
         null=True,
     )
+    address: models.CharField = models.CharField(max_length=100, blank=True, null=True)
     # Media
     profile_image: models.ImageField = models.ImageField(
         upload_to=profile_image_path, default="default.png"
@@ -111,7 +112,6 @@ def deleteProfileImageAndFolder(sender, instance, using, **kwargs) -> None:
     delete_profile_image_and_folder(instance)
 
 
-
 def check_user_roles(instance, role_model, related_name, role_name):
     """
     Function to check if current instance does not have multiple roles
@@ -128,10 +128,12 @@ def check_user_roles(instance, role_model, related_name, role_name):
         # If a related instance exists, raise a validation error
         raise IntegrityError(f"User cannot have multiple {role_name} roles")
 
+
 @receiver(pre_save, sender=Doctor)
 def check_doctor_roles(sender, instance, **kwargs):
-    check_user_roles(instance, Doctor, 'staff', 'Doctor')
+    check_user_roles(instance, Doctor, "staff", "Doctor")
+
 
 @receiver(pre_save, sender=Staff)
 def check_staff_roles(sender, instance, **kwargs):
-    check_user_roles(instance, Staff, 'doctor', 'Staff')
+    check_user_roles(instance, Staff, "doctor", "Staff")

@@ -8,7 +8,11 @@ from .permissions import (
     IsEmployee,
     IsActive,
 )
-from .serializers import EmployeeLoginSerializer
+from .serializers import (
+    EmployeeLoginSerializer,
+    StaffUserRegisterationSerializers,
+    DoctorUserRegisterationSerializer,
+)
 from staff.models import Staff, Doctor
 
 
@@ -37,6 +41,7 @@ def get_error(errors: list | dict) -> str:
 # Create your views here.
 class EmployeeLoginView(APIView):
     """Employee Login View"""
+
     permission_classes = (IsEmployee, IsActive)
 
     def post(self, request, *args, **kwargs):
@@ -75,5 +80,17 @@ def staff_registeration(request, *args, **kwargs):
 def doctor_registeration(request, *args, **kwargs):
     """Register a new doctor to staff"""
     # Code to validate the doctor's credentials and save them in the database goes here
- 
-    return Response("Doctor registeration under review.")
+    # create DoctorSerializer
+    doctor_serializer = DoctorUserRegisterationSerializer(data=request.data)
+    # Validate the serializer
+    if doctor_serializer.is_valid():
+        # Create new User, Doctor
+        doctor_serializer.save()
+        # Create a function that sends a message to email.
+        # Once verified convert User.is_active to True
+        return Response(
+            "Please visit to your email to activate your account.", status=status.HTTP_201_CREATED
+        )
+    # Grab error
+    error: str = get_error(doctor_serializer.errors)
+    return Response(error, status=status.HTTP_403_FORBIDDEN)

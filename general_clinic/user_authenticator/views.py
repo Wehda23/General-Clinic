@@ -8,6 +8,7 @@ from .refresh_token import IsRefreshToken, get_tokens_for_user
 from patient.models import Patient
 from .permissions import IsActive
 
+
 def get_error(errors: list | dict) -> str:
     """Function used to grab or parse error message from errors
 
@@ -34,7 +35,9 @@ class LoginView(APIView):
     """
     This view will be used for the purpose of a user to Login/Register view.
     """
+
     permission_classes = (IsActive,)
+
     # Account Login
     def post(self, request, *args, **kwargs):
         """

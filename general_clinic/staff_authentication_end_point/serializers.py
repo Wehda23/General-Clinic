@@ -2,20 +2,25 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from staff.models import Doctor, Staff
 from .refresh_token import get_tokens_for_user
+from .validators import (
+    EmailValidator,
+    NameValidator,
+    PasswordValidator,
+)
 
 
 # Create Staff Serializer
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model: Staff = Staff
-        exclude = ['user']
+        exclude = ["user"]
 
 
 # Create Doctor Serializer
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model: Doctor = Doctor
-        exclude = ['user']
+        exclude = ["user"]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -46,7 +51,6 @@ class EmployeeLoginSerializer(serializers.ModelSerializer):
             return DoctorSerializer(employee.doctor).data
         else:
             raise serializers.ValidationError("Employee is not a valid user")
-                
 
     def validate(self, attrs) -> dict:
         """Method used to validate User"""
@@ -71,21 +75,120 @@ class EmployeeLoginSerializer(serializers.ModelSerializer):
         return {**UserSerializer(employee).data, **employee_data, "token": token}
 
 
-# Employee Registeration Serializers 
-class StaffRegisterationSerializers(serializers.ModelSerializer):
+# ------------------------------- STAFF RELATED Registeration SERIALIZERS ---------------------------- #
+
+
+class StaffRegisterationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model: Staff = Staff
+        fields: tuple = (
+            "position",
+            "contact_info",
+            "date_of_birth",
+        )
+        extra_kwargs: dict = {
+            "position": {"required": True},
+            "contact_info": {"required": True},
+            "date_of_birth": {"required": True},
+        }
+
+
+# Employee Registeration Serializers
+class StaffUserRegisterationSerializers(serializers.ModelSerializer):
+    staff = StaffRegisterationSerializer()
+
     class Meta:
         model: User = User
-        fields = "__all__"
+        fields = ("first_name", "last_name", "email", "password", "staff")
+        extra_kwargs: dict = {
+            "password": {"write_only": True, "required": True},
+            "email": {"required": True},
+            "first_name": {"required": True},
+            "last_name": {"required": True},
+            "staff": {"required": True},
+        }
 
     def validate(self, attrs) -> dict:
         """method to validate data"""
+
 
 class DoctorRegisterationSerializer(serializers.ModelSerializer):
     class Meta:
+        model: Doctor = Doctor
+        fields: tuple = (
+            "address",
+            "position",
+            "contact_info",
+            "date_of_birth",
+        )
+        extra_kwargs: dict = {
+            "address": {"required": True},
+            "position": {"required": True},
+            "contact_info": {"required": True},
+            "date_of_birth": {"required": True},
+        }
+
+
+class DoctorUserRegisterationSerializer(serializers.ModelSerializer):
+    doctor = DoctorRegisterationSerializer()
+
+    class Meta:
         model: User = User
-        fields = "__all__"
-    
+        fields: tuple = ("first_name", "last_name", "email", "password", "doctor")
+        extra_kwargs: dict = {
+            "password": {"write_only": True, "required": True},
+            "email": {"required": True},
+            "first_name": {"required": True},
+            "last_name": {"required": True},
+            "doctor": {"required": True},
+        }
+
+    def validate_first_name(self, name) -> str:
+        """Method to validate first name"""
+        # validate
+        NameValidator(name, serializers.ValidationError).validate()
+        return name
+
+    def validate_last_name(self, name) -> str:
+        """Method to validate first name"""
+        # validate
+        NameValidator(name, serializers.ValidationError).validate()
+        return name
+
+    def validate_password(self, password) -> str:
+        """Method to validate password"""
+        # Validate
+        PasswordValidator(password, serializers.ValidationError).validate()
+        return password
+
+    def validate_email(self, email) -> str:
+        """Validate email"""
+        # validate
+        EmailValidator(email, serializers.ValidationError).validate()
+        return email
+
     def validate(self, attrs) -> dict:
         """method to validate data"""
-        
-    
+
+        # Check if a user with this email already exists or not
+        if User.objects.filter(email=attrs["email"]).exists():
+            # Raise error
+            raise serializers.ValidationError("Email is already registered")
+
+        return attrs
+
+    def create(self, validated_data, *args, **kwargs):
+        """Create new user instance with validated data and add it to the database."""
+        # get new doctor data
+        doctor_data = validated_data.pop("doctor")
+        # Create User name functionality
+        username: str = validated_data["first_name"] + " " + validated_data["last_name"]
+        # Create user
+        user: User = User.objects.create_user(**validated_data, username=username)
+        # Create new doctor and set User to Doctor.
+        new_doctor: Doctor = Doctor.objects.create(**doctor_data, user=user)
+        # set doctor to inactive
+        new_doctor.is_active = False
+        new_doctor.save()
+        # Return created user
+        return user
