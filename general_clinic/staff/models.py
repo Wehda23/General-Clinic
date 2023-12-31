@@ -111,16 +111,27 @@ def deleteProfileImageAndFolder(sender, instance, using, **kwargs) -> None:
     delete_profile_image_and_folder(instance)
 
 
+
+def check_user_roles(instance, role_model, related_name, role_name):
+    """
+    Function to check if current instance does not have multiple roles
+
+    Args:
+        - instance: Model Instance
+        - role_model: Model class Name
+        - related_name: Model attribute related name in form of python str
+        - role_name: instance role name in form of python str.
+    """
+    # Check if a related instance already exists in any other model
+    related_instance = getattr(instance.user, related_name, None)
+    if related_instance and related_instance != instance:
+        # If a related instance exists, raise a validation error
+        raise IntegrityError(f"User cannot have multiple {role_name} roles")
+
 @receiver(pre_save, sender=Doctor)
 def check_doctor_roles(sender, instance, **kwargs):
-    # Check if a related instance already exists in any other model
-    if hasattr(instance.user, 'staff'):
-        # If a related instance exists, prevent saving the User
-        raise IntegrityError('User cannot have multiple roles')
+    check_user_roles(instance, Doctor, 'staff', 'Doctor')
 
 @receiver(pre_save, sender=Staff)
 def check_staff_roles(sender, instance, **kwargs):
-    # Check if a related instance already exists in any other model
-    if hasattr(instance.user, 'doctor'):
-        # If a related instance exists, prevent saving the User
-        raise IntegrityError('User cannot have multiple roles')
+    check_user_roles(instance, Staff, 'doctor', 'Staff')

@@ -3,11 +3,12 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
-from staff_authentication_end_point.authenticators import (
+from .permissions import (
     IsStaff,
     IsEmployee,
+    IsActive,
 )
-from staff_authentication_end_point.serializers import EmployeeLoginSerializer
+from .serializers import EmployeeLoginSerializer
 from staff.models import Staff, Doctor
 
 
@@ -36,7 +37,7 @@ def get_error(errors: list | dict) -> str:
 # Create your views here.
 class EmployeeLoginView(APIView):
     """Employee Login View"""
-    permission_classes = (IsEmployee,)
+    permission_classes = (IsEmployee, IsActive)
 
     def post(self, request, *args, **kwargs):
         """Login post requests for Employee"""
@@ -74,5 +75,5 @@ def staff_registeration(request, *args, **kwargs):
 def doctor_registeration(request, *args, **kwargs):
     """Register a new doctor to staff"""
     # Code to validate the doctor's credentials and save them in the database goes here
-
+ 
     return Response("Doctor registeration under review.")

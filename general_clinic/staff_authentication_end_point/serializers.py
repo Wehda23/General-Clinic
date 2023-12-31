@@ -8,14 +8,14 @@ from .refresh_token import get_tokens_for_user
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model: Staff = Staff
-        fields = "__all__"
+        exclude = ['user']
 
 
 # Create Doctor Serializer
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model: Doctor = Doctor
-        fields = "__all__"
+        exclude = ['user']
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class EmployeeLoginSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Employee is not a valid user")
                 
 
-    def validate(self, attrs):
+    def validate(self, attrs) -> dict:
         """Method used to validate User"""
 
         # Check if user exists
@@ -69,3 +69,23 @@ class EmployeeLoginSerializer(serializers.ModelSerializer):
         token: dict = get_tokens_for_user(employee)
         # Add Token data to employee data and return it
         return {**UserSerializer(employee).data, **employee_data, "token": token}
+
+
+# Employee Registeration Serializers 
+class StaffRegisterationSerializers(serializers.ModelSerializer):
+    class Meta:
+        model: User = User
+        fields = "__all__"
+
+    def validate(self, attrs) -> dict:
+        """method to validate data"""
+
+class DoctorRegisterationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model: User = User
+        fields = "__all__"
+    
+    def validate(self, attrs) -> dict:
+        """method to validate data"""
+        
+    
