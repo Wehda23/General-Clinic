@@ -71,8 +71,23 @@ class EmployeeLoginView(APIView):
 @permission_classes([IsAuthenticated, IsStaff, IsActive])
 def staff_registeration(request, *args, **kwargs):
     """Register a new staff member."""
+    staff_serializer = StaffUserRegisterationSerializers(data=request.data)
 
-    return Response("Staff registeration under review", status=status.HTTP_200_OK)
+    if staff_serializer.is_valid():
+        # Register new staff member
+        staff_user = staff_serializer.save()
+        # Assign permissions to the user
+        staff_user.is_active = False
+        staff_user.save()
+        # Create a function that sends a message to email.
+        # Once verified convert User.is_active to True
+        return Response(
+            "Please open your mail to activate your staff account.",
+            status=status.HTTP_201_CREATED,
+        )
+    # Grab error
+    error: str = get_error(staff_serializer.errors)
+    return Response(error, status=status.HTTP_200_OK)
 
 
 # Any doctor can register their account normally with out having to be permitted
@@ -85,7 +100,10 @@ def doctor_registeration(request, *args, **kwargs):
     # Validate the serializer
     if doctor_serializer.is_valid():
         # Create new User, Doctor
-        doctor_serializer.save()
+        doctor_user = doctor_serializer.save()
+        # Assign permissions to the doctor_user
+        doctor_user.is_active = False
+        doctor_user.save()
         # Create a function that sends a message to email.
         # Once verified convert User.is_active to True
         return Response(

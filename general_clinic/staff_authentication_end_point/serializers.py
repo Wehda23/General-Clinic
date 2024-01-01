@@ -107,9 +107,59 @@ class StaffUserRegisterationSerializers(serializers.ModelSerializer):
             "last_name": {"required": True},
             "staff": {"required": True},
         }
+    def validate_first_name(self, name) -> str:
+        """Method to validate first name"""
+        # validate
+        NameValidator(name, serializers.ValidationError).validate()
+        return name
 
+    def validate_last_name(self, name) -> str:
+        """Method to validate first name"""
+        # validate
+        NameValidator(name, serializers.ValidationError).validate()
+        return name
+
+    def validate_password(self, password) -> str:
+        """Method to validate password"""
+        # Validate
+        PasswordValidator(password, serializers.ValidationError).validate()
+        return password
+
+    def validate_email(self, email) -> str:
+        """Validate email"""
+        # validate
+        EmailValidator(email, serializers.ValidationError).validate()
+        return email
+    
     def validate(self, attrs) -> dict:
         """method to validate data"""
+
+        # Check if a user with this email already exists or not
+        if User.objects.filter(email=attrs["email"]).exists():
+            # Raise error
+            raise serializers.ValidationError("Email is already registered")
+
+        return attrs
+
+    def create(self, validated_data, *args, **kwargs):
+        """Method used to create a new instance of the serializer class Model"""
+        # get new staff data
+        staff_data = validated_data.pop("staff")
+        # Create User name functionality here, you can make it so that it recreates a unique username to avoid errors.
+        username: str = (
+            validated_data["first_name"]
+            + "-"
+            + validated_data["last_name"]
+            + "#"
+            + validated_data["date_of_birth"]
+        )
+        # Create user
+        user: User = User.objects.create_user(**validated_data, username=username)
+        # Create new staff and set User to staff.
+        new_staff: Staff = Staff.objects.create(**staff_data, user=user)
+        # set staff to inactive
+        # Return created user
+        return user
 
 
 class DoctorRegisterationSerializer(serializers.ModelSerializer):
