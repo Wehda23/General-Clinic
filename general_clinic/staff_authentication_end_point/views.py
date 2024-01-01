@@ -68,7 +68,7 @@ class EmployeeLoginView(APIView):
 
 # We are going to create a staff registeration view which will require an authenticated member to register this new staff member
 @api_view(["POST"])
-@permission_classes([IsAuthenticated, IsStaff])
+@permission_classes([IsAuthenticated, IsStaff, IsActive])
 def staff_registeration(request, *args, **kwargs):
     """Register a new staff member."""
 
@@ -89,7 +89,8 @@ def doctor_registeration(request, *args, **kwargs):
         # Create a function that sends a message to email.
         # Once verified convert User.is_active to True
         return Response(
-            "Please visit to your email to activate your account.", status=status.HTTP_201_CREATED
+            "Please visit to your email to activate your account.",
+            status=status.HTTP_201_CREATED,
         )
     # Grab error
     error: str = get_error(doctor_serializer.errors)

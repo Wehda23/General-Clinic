@@ -19,7 +19,7 @@ class IsActive(BasePermission):
         """Method to check user"""
         if isinstance(request.user, AnonymousUser):
             # Check if key email exists, if not just return False.
-            if not "email" in request.user:
+            if not "email" in request.data:
                 return False
             # Check user is active or not
             return self.validate_user(request.data["email"])

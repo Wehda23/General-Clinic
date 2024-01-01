@@ -181,14 +181,20 @@ class DoctorUserRegisterationSerializer(serializers.ModelSerializer):
         """Create new user instance with validated data and add it to the database."""
         # get new doctor data
         doctor_data = validated_data.pop("doctor")
-        # Create User name functionality
-        username: str = validated_data["first_name"] + " " + validated_data["last_name"]
+        # Create User name functionality here, you can make it so that it recreates a unique username to avoid errors.
+        username: str = (
+            validated_data["first_name"]
+            + "-"
+            + validated_data["last_name"]
+            + "#"
+            + validated_data["date_of_birth"]
+        )
         # Create user
         user: User = User.objects.create_user(**validated_data, username=username)
+        user.is_active = False
+        user.save()
         # Create new doctor and set User to Doctor.
         new_doctor: Doctor = Doctor.objects.create(**doctor_data, user=user)
         # set doctor to inactive
-        new_doctor.is_active = False
-        new_doctor.save()
         # Return created user
         return user
