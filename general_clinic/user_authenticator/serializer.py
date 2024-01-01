@@ -147,6 +147,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # Create the user instance
         validated_data["username"] = " "
         user = User.objects.create_user(**validated_data)
+        # Add a functionality that creates a unique user name to avoid errors
         user.username = user.first_name + " " + user.last_name
         user.save()
         # Create the patient instance

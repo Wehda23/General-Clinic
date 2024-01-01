@@ -82,11 +82,13 @@ class StaffRegisterationSerializer(serializers.ModelSerializer):
     class Meta:
         model: Staff = Staff
         fields: tuple = (
+            "address",
             "position",
             "contact_info",
             "date_of_birth",
         )
         extra_kwargs: dict = {
+            "address": {"required": True},
             "position": {"required": True},
             "contact_info": {"required": True},
             "date_of_birth": {"required": True},
@@ -241,8 +243,6 @@ class DoctorUserRegisterationSerializer(serializers.ModelSerializer):
         )
         # Create user
         user: User = User.objects.create_user(**validated_data, username=username)
-        user.is_active = False
-        user.save()
         # Create new doctor and set User to Doctor.
         new_doctor: Doctor = Doctor.objects.create(**doctor_data, user=user)
         # set doctor to inactive
